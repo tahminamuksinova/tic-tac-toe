@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <table>
+        <tr>
+            <td onclick="makeMove(0, 0)"></td>
+            <td onclick="makeMove(0, 1)"></td>
+            <td onclick="makeMove(0, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(1, 0)"></td>
+            <td onclick="makeMove(1, 1)"></td>
+            <td onclick="makeMove(1, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(2, 0)"></td>
+            <td onclick="makeMove(2, 1)"></td>
+            <td onclick="makeMove(2, 2)"></td>
+        </tr>
+    </table>
+    <div id="status"></div>
+    <button onclick="resetGame()">Reset Game</button>
+
+    <script>
+        let board = [
+            ["", "", ""],
+            ["", "", ""],
+            ["", "", ""]
+        ];
+        let currentPlayer = "X";
+        let gameOver = false;
+
+        function printBoard() {
+            const cells = document.querySelectorAll("td");
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    cells[i * 3 + j].innerText = board[i][j];
+                }
+            }
+        }
+
+        function checkWinner(player) {
+            const winConditions = [
+                [board[0][0], board[0][1], board[0][2]],
+                [board[1][0], board[1][1], board[1][2]],
+                [board[2][0], board[2][1], board[2][2]],
+                [board[0][0], board[1][0], board[2][0]],
+                [board[0][1], board[1][1], board[2][1]],
+                [board[0][2], board[1][2], board[2][2]],
+                [board[0][0], board[1][1], board[2][2]],
+                [board[2][0], board[1][1], board[0][2]],
+            ];
+
+            return winConditions.some(condition => condition.every(cell => cell === player));
+        }
+
+        function isFull() {
+            return board.flat().every(cell => cell !== "");
+        }
+
+        function makeMove(row, col) {
+            if (board[row][col] === "" && !gameOver) {
+                board[row][col] = currentPlayer;
+                if (checkWinner(currentPlayer)) {
+                    document.getElementById("status").innerText = `Player ${currentPlayer} wins!`;
+                    gameOver = true;
+                } else if (isFull()) {
+                    document.getElementById("status").innerText = "The game is a tie!";
+                    gameOver = true;
+                } else {
+                    currentPlayer = currentPlayer === "X" ? "O" : "X";
+                }
+                printBoard();
+            }
+        }
+
+        function resetGame() {
+            board = [
+                ["", "", ""],
+                ["", "", ""],
+                ["", "", ""]
+            ];
+            currentPlayer = "X";
+            gameOver = false;
+            document.getElementById("status").innerText = "";
+            printBoard();
+        }
+
+        printBoard();
+    </script>
+</body>
+</html>
